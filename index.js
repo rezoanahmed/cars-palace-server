@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const port = process.env.PORT || 5000;
+const port =  5000;
 require('dotenv').config()
 // middlewares
 app.use(cors())
@@ -30,14 +30,20 @@ async function run() {
     // create database
     const carCollection = client.db("CarDB").collection("cars");
 
-    
+    // CRUD - CREATE
+    app.post("/cars", async(req,res)=>{
+      const car = req.body;
+      // console.log(car);
+      const result = await carCollection.insertOne(car)
+      res.send(result);
+    })
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
-    await client.close();
+    // await client.close();
   }
 }
 run().catch(console.dir);
