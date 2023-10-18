@@ -45,13 +45,21 @@ async function run() {
 
       res.send(cars);
     })
-
+    // find cars by brand name
     app.get("/cars/:name", async (req, res) => {
       const carName = req.params.name;
       const query = { brand: carName };
       const cars = await carCollection.find(query).toArray();
       res.send(cars);
     });
+
+    // find specific car by id
+    app.get("/car/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await carCollection.findOne(query);
+      res.send(result);
+    })
 
 
 
