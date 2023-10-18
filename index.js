@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const port =  5000;
+const port = 5000;
 require('dotenv').config()
 // middlewares
 app.use(cors())
@@ -9,7 +9,7 @@ app.use(express.json())
 
 // mongo db
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.user}:${process.env.pass}@cluster0.5fxcqx1.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -29,9 +29,10 @@ async function run() {
 
     // create database
     const carCollection = client.db("CarDB").collection("cars");
+    const brands = client.db("CarDB").collection("brands");
 
     // CRUD - CREATE
-    app.post("/cars", async(req,res)=>{
+    app.post("/cars", async (req, res) => {
       const car = req.body;
       // console.log(car);
       const result = await carCollection.insertOne(car)
@@ -39,11 +40,29 @@ async function run() {
     })
 
     // CRUD - READ
-    app.get("/cars", async(req,res)=>{
+    app.get("/cars", async (req, res) => {
       const cars = await carCollection.find().toArray();
-      
+
       res.send(cars);
     })
+
+    app.get("/cars/:name", async (req, res) => {
+      const carName = req.params.name;
+      const query = { brand: carName };
+      const cars = await carCollection.find(query).toArray();
+      res.send(cars);
+    });
+
+
+
+
+    // brands
+    app.get("/brands", async (req, res) => {
+      const result = await brands.find().toArray();
+      res.send(result);
+    })
+
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
@@ -56,11 +75,11 @@ async function run() {
 run().catch(console.dir);
 
 
-app.get("/",(req,res)=>{
-    const message = "This server is working";
-    res.send(message);
+app.get("/", (req, res) => {
+  const message = "This server is working";
+  res.send(message);
 })
 
-app.listen(port, ()=>{
-    console.log(`Server is running on port: ${port}`);
+app.listen(port, () => {
+  console.log(`Server is running on port: ${port}`);
 })
