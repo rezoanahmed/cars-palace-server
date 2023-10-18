@@ -30,6 +30,7 @@ async function run() {
     // create database
     const carCollection = client.db("CarDB").collection("cars");
     const brands = client.db("CarDB").collection("brands");
+    const cart = client.db("CarDB").collection("cart");
 
     // CRUD - CREATE
     app.post("/cars", async (req, res) => {
@@ -69,6 +70,15 @@ async function run() {
       const result = await brands.find().toArray();
       res.send(result);
     })
+
+    // cart
+    app.post("/cart", async(req,res)=>{
+      const item = req.body;
+      // console.log(item);
+      const result = await cart.insertOne(item);
+      res.send(result);
+    })
+
 
 
 
