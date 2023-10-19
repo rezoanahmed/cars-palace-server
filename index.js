@@ -61,14 +61,33 @@ async function run() {
       const result = await carCollection.findOne(query);
       res.send(result);
     })
-    app.delete("/car/:id", async(req,res)=>{
-      const id=req.params.id;
-      const query = {_id: new ObjectId(id)};
+    app.delete("/car/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
       const result = await carCollection.deleteOne(query);
       res.send(result);
     })
 
-
+    app.patch("/car/:id", async(req, res) => {
+      const id = req.params.id;
+      const car = req.body;
+      const filter = {_id: new ObjectId(id)};
+      const options = {upsert: true};
+      const updatedCar = {
+        $set:{
+          brand: car.brand,
+          model: car.model, 
+          year: car.year, 
+          type: car.type, 
+          price: car.price, 
+          rating: car.rating, 
+          photo: car.photo, 
+          details: car.details
+        }
+      }
+    const result = await carCollection.updateOne(filter, updatedCar, options);
+    res.send(result);
+    })
 
 
     // brands
@@ -78,13 +97,13 @@ async function run() {
     })
 
     // cart
-    app.post("/cart", async(req,res)=>{
+    app.post("/cart", async (req, res) => {
       const item = req.body;
       // console.log(item);
       const result = await cart.insertOne(item);
       res.send(result);
     })
-    app.get("/cart",async(req,res)=>{
+    app.get("/cart", async (req, res) => {
       const result = await cart.find().toArray();
       res.send(result);
     })
