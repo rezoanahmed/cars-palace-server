@@ -99,18 +99,20 @@ async function run() {
     // cart
     app.post("/cart", async (req, res) => {
       const item = req.body;
+      delete item._id
+      // console.log(item);
       // console.log(item);
       const result = await cart.insertOne(item);
       res.send(result);
     })
     app.get("/cart", async (req, res) => {
       const result = await cart.find().toArray();
-      res.send(result);
+      res.send(result); 
     })
     app.delete("/cart/:id", async(req,res)=>{
       const id = req.params.id;
       // console.log(id);
-      const requirement = {_id: id};
+      const requirement = {_id: new ObjectId(id)};
       const result = await cart.deleteOne(requirement);
       res.send(result);
     })
