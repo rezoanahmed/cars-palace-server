@@ -31,6 +31,7 @@ async function run() {
     const carCollection = client.db("CarDB").collection("cars");
     const brands = client.db("CarDB").collection("brands");
     const cart = client.db("CarDB").collection("cart");
+    const test = client.db("CarDB").collection("test");
 
     // CRUD - CREATE
     app.post("/cars", async (req, res) => {
@@ -114,6 +115,12 @@ async function run() {
       // console.log(id);
       const requirement = {_id: new ObjectId(id)};
       const result = await cart.deleteOne(requirement);
+      res.send(result);
+    })
+
+    // test
+    app.get("/customers",async(req,res)=>{
+      const result = await test.find().toArray();
       res.send(result);
     })
 
