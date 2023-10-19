@@ -107,6 +107,13 @@ async function run() {
       const result = await cart.find().toArray();
       res.send(result);
     })
+    app.delete("/cart/:id", async(req,res)=>{
+      const id = req.params.id;
+      // console.log(id);
+      const requirement = {_id: id};
+      const result = await cart.deleteOne(requirement);
+      res.send(result);
+    })
 
 
 
