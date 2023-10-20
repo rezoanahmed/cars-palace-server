@@ -97,6 +97,13 @@ async function run() {
       res.send(result);
     })
 
+    app.get("/brands/:name", async(req,res)=>{
+      const name = req.params.name;
+      const query = {name: name};
+      const result = await brands.findOne(query);
+      res.send(result);
+    })
+
     // cart
     app.post("/cart", async (req, res) => {
       const item = req.body;
